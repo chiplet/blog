@@ -1,0 +1,27 @@
+name: Pelican site CI
+
+on:
+  # Trigger the workflow on push or pull request,
+  # but only for the main branch
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: 'true'
+    - uses: actions/setup-node@v4
+    - uses: actions/setup-python@v5
+    - run: pip install -r requirements.txt
+    - name: Setup theme
+      run: pelican-themes -i pelican-bootstrap3
+    - name: Build with Pelican
+      uses: nelsonjchen/gh-pages-pelican-action@0.1.5
+      env:
+        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
